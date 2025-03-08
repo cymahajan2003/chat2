@@ -258,7 +258,6 @@
                         <option value="es">Spanish</option>
                         <option value="hi">Hindi</option>
                         <option value="fr">French</option>
-                        <!-- Add more languages as needed -->
                     </select>
                     <textarea id="inputText" placeholder="Type text to translate..."></textarea>
                 </div>
@@ -268,7 +267,6 @@
                         <option value="es">Spanish</option>
                         <option value="hi">Hindi</option>
                         <option value="fr">French</option>
-                        <!-- Add more languages as needed -->
                     </select>
                     <div id="outputText" class="output-text"></div>
                 </div>
@@ -307,7 +305,16 @@
                     welcomeSection.style.display = 'none';
                     translationSection.style.display = 'block';
                     translationSection.classList.add('fade-in');
-                    setTimeout(() => translationSection.classList.remove('fade-in'), 500);
+                    setTimeout(() => {
+                        translationSection.classList.remove('fade-in');
+                        // Attach event listeners after transition
+                        inputText.addEventListener('input', debounce(translateText, 500));
+                        sourceLang.addEventListener('change', translateText);
+                        targetLang.addEventListener('change', translateText);
+                        useKeyboardBtn.addEventListener('click', () => {
+                            inputText.focus();
+                        });
+                    }, 500);
                 }, 500);
             }
 
@@ -333,14 +340,10 @@
                 };
             }
 
-            if (translationSection.style.display !== 'none') {
-                inputText.addEventListener('input', debounce(translateText, 500));
-                sourceLang.addEventListener('change', translateText);
-                targetLang.addEventListener('change', translateText);
-                useKeyboardBtn.addEventListener('click', () => {
-                    inputText.focus();
-                });
-            }
+            // Add event listeners to all option buttons programmatically
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', showTranslation);
+            });
         });
     </script>
 </body>
